@@ -1,6 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render, get_object_or_404
 from .forms import UrlForm
+from .models import Url
 
 # Create your views here.
 
@@ -17,6 +18,13 @@ def shorten(request):
             return render(request, "ss/url.html", {"url": shortUrl.url, "short":hash(id)})
         return render(request, "ss/shorten.html", {"form":urlForm})
     return render(request, "ss/shorten.html", {"form":UrlForm()})
+
+
+def redirectUrl(request, short):
+    id = getId(short)
+    url = get_object_or_404(Url, id = id)
+    return redirect(url.url)
+
 
 def hash(id):
     alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
