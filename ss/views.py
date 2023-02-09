@@ -31,7 +31,7 @@ def hash(id):
     shortUrl = ""
     while int(id):
         char = int(id%62)
-        shortUrl = alphabet[char] + shortUrl
+        shortUrl = alphabet[char-1] + shortUrl
         id /= 62
     return shortUrl
 
@@ -41,7 +41,7 @@ def getId(shortUrl):
     base = 62
     reversedShortUrl = shortUrl[::-1]
     for idx, char in enumerate(reversedShortUrl):
-        num = alphabet.index(char)
+        num = alphabet.index(char) + 1
         id += num * pow(base, idx)
     return id
 # print(hash(12345))
