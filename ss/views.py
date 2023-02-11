@@ -3,12 +3,15 @@ from django.shortcuts import redirect, render, get_object_or_404
 from .forms import UrlForm
 from .models import Url
 from decouple import config
-import requests, base64
+import requests
+import base64
 
 # Create your views here.
 
+
 def home(request):
     return HttpResponse("welcome")
+
 
 def shorten(request):
     if request.method == "POST":
@@ -20,28 +23,29 @@ def shorten(request):
             if status:
                 shortUrl = urlForm.save()
                 id = shortUrl.id
-                return render(request, "ss/url.html", {"url": shortUrl.url, "short":hash(id)})
-            return render(request, "ss/security.html", {"url" : url, "shorten":True, "secure":status, "vendors":vendors})
-        return render(request, "ss/shorten.html", {"form":urlForm})
-    return render(request, "ss/shorten.html", {"form":UrlForm()})
+                return render(request, "ss/url.html", {"url": shortUrl.url, "short": hash(id)})
+            return render(request, "ss/security.html", {"url": url, "shorten": True, "secure": status, "vendors": vendors})
+        return render(request, "ss/shorten.html", {"form": urlForm})
+    return render(request, "ss/shorten.html", {"form": UrlForm()})
 
 
 def redirectUrl(request, short):
     id = getId(short)
-    url = get_object_or_404(Url, id = id)
+    url = get_object_or_404(Url, id=id)
     result = isSecure(url.url)
     vendors, status = result[0], result[1]
-    return render(request, "ss/security.html", {"url" : url.url, "secure":status, "vendors":vendors})
+    return render(request, "ss/security.html", {"url": url.url, "secure": status, "vendors": vendors})
 
 
 def hash(id):
     alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     shortUrl = ""
     while int(id):
-        char = int(id%62)
+        char = int(id % 62)
         shortUrl = alphabet[char-1] + shortUrl
         id /= 62
     return shortUrl
+
 
 def getId(shortUrl):
     alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -52,8 +56,7 @@ def getId(shortUrl):
         num = alphabet.index(char) + 1
         id += num * pow(base, idx)
     return id
-# print(hash(12345))
-# print(getId("dnh"))
+
 
 def isSecure(url):
     url_id = base64.urlsafe_b64encode(f"{url}".encode()).decode().strip("=")
