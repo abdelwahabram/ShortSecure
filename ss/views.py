@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import UrlForm
 from .models import Url
+from decouple import config
+import requests, base64
 
 # Create your views here.
 
@@ -12,10 +14,14 @@ def shorten(request):
     if request.method == "POST":
         urlForm = UrlForm(request.POST)
         if urlForm.is_valid():
-            # ToDo: check security
-            shortUrl = urlForm.save()
-            id = shortUrl.id
-            return render(request, "ss/url.html", {"url": shortUrl.url, "short":hash(id)})
+            url = urlForm.cleaned_data["url"]
+            result = isSecure(url)
+            vendors, status = result[0], result[1]
+            if status:
+                shortUrl = urlForm.save()
+                id = shortUrl.id
+                return render(request, "ss/url.html", {"url": shortUrl.url, "short":hash(id)})
+            return render(request, "ss/security.html", {"url" : url, "shorten":True, "secure":status, "vendors":vendors})
         return render(request, "ss/shorten.html", {"form":urlForm})
     return render(request, "ss/shorten.html", {"form":UrlForm()})
 
@@ -23,7 +29,9 @@ def shorten(request):
 def redirectUrl(request, short):
     id = getId(short)
     url = get_object_or_404(Url, id = id)
-    return redirect(url.url)
+    result = isSecure(url.url)
+    vendors, status = result[0], result[1]
+    return render(request, "ss/security.html", {"url" : url.url, "secure":status, "vendors":vendors})
 
 
 def hash(id):
@@ -46,3 +54,20 @@ def getId(shortUrl):
     return id
 # print(hash(12345))
 # print(getId("dnh"))
+
+def isSecure(url):
+    url_id = base64.urlsafe_b64encode(f"{url}".encode()).decode().strip("=")
+    api = config('api')
+    url = f"https://www.virustotal.com/api/v3/urls/{url_id}"
+    headers = {
+        "accept": "application/json",
+        "x-apikey": api
+    }
+    response = requests.get(url, headers=headers)
+    res = response.json()
+    vendors = res['data']['attributes']['last_analysis_results']
+    status = True
+    for vendor in vendors:
+        if vendors[vendor]['result'] == 'malicious':
+            status = False
+    return [vendors, status]
