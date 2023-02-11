@@ -4,4 +4,4 @@ from django.forms import ModelForm
 class UrlForm(ModelForm):
     class Meta():
         model = Url
-        fields = '__all__'
+        fields = ['url']
