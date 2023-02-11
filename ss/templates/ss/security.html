@@ -1,0 +1,19 @@
+{% extends "ss/layout.html" %}
+{% block body %}
+{% if secure %}
+    <h2>This site is Fine</h2>
+    <a href="{{url}}">continue</a>
+{% else %}
+    <h2>This site has been flagged as malicious</h2>
+    {% if shorten %}
+    <a href="{% url 'shorten' %}">shorten another url</a>
+    {% else %}
+    <a href="{{url}}">continue</a>
+    {% endif %}
+{% endif %}
+<h3>virus total report</h3>
+{% for vendor, data in vendors.items %}
+{{vendor}}
+{{data}}
+{% endfor %}
+{% endblock %}
