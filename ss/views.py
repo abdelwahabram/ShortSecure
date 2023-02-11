@@ -38,9 +38,11 @@ def shorten(request):
 def redirectUrl(request, short):
     id = getId(short)
     url = get_object_or_404(Url, id=id)
-    result = isSecure(url.url)
-    vendors, status = result[0], result[1]
-    return render(request, "ss/security.html", {"url": url.url, "secure": status, "vendors": vendors})
+    if url.status:
+        result = isSecure(url.url)
+        vendors, status = result[0], result[1]
+        return render(request, "ss/security.html", {"url": url.url, "secure": status, "vendors": vendors})
+    return redirect("home")#, message="url isn't active")
 
 
 def hash(id):
