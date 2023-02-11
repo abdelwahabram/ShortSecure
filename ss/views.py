@@ -15,7 +15,13 @@ def home(request):
 
 def shorten(request):
     if request.method == "POST":
-        urlForm = UrlForm(request.POST)
+        if request.user.is_authenticated:
+            urlObject = Url(user=request.user, session=request.session.session_key)
+        else:
+            request.session.save()
+            print(request.session.session_key)
+            urlObject = Url(session=request.session.session_key)
+        urlForm = UrlForm(request.POST, instance=urlObject)
         if urlForm.is_valid():
             url = urlForm.cleaned_data["url"]
             result = isSecure(url)
