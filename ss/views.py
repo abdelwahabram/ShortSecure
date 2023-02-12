@@ -63,6 +63,17 @@ def redirectUrl(request, short):
     return redirect("home")#, message="url isn't active")
 
 
+def viewUrls(request):
+    user = request.user
+    urls = None
+    if user.is_authenticated:
+        urls = Url.objects.filter(user=user)
+    elif "urls" in request.session:
+        id_list = request.session["urls"]
+        urls = Url.objects.filter(id__in=id_list)
+    return render(request, "ss/myUrls.html", {"urls":urls})
+
+
 def hash(id):
     alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     shortUrl = ""
