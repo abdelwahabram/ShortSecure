@@ -18,9 +18,10 @@ def register(request):
     if request.method == "POST":
         newUserForm = UserRegistrationForm(request.POST)
         if newUserForm.is_valid():
+            saveSession = newUserForm.cleaned_data["saveSession"]
             newUser = newUserForm.save()
             login(request, newUser)
-            if request.session["urls"]:
+            if "urls" in request.session and saveSession:
                 id_list = request.session["urls"]
                 Url.objects.filter(id__in=id_list).update(user=request.user)
             return redirect("home")
@@ -45,8 +46,7 @@ def shorten(request):
                 shortUrl = urlForm.save()
                 id = shortUrl.id
                 if not request.user.is_authenticated:
-                    if not request.session["urls"]:
-                        request.session["urls"] += [id]
+                    request.session["urls"] += [id]
                 return render(request, "ss/url.html", {"url": shortUrl.url, "short": hash(id)})
             return render(request, "ss/security.html", {"url": url, "shorten": True, "secure": status, "vendors": vendors})
         return render(request, "ss/shorten.html", {"form": urlForm})
