@@ -1,16 +1,28 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
-from .forms import UrlForm
+from .forms import UrlForm, UserRegistrationForm
 from .models import Url
 from decouple import config
 import requests
 import base64
+from django.contrib.auth import login
 
 # Create your views here.
 
 
 def home(request):
     return HttpResponse("welcome")
+
+
+def register(request):
+    if request.method == "POST":
+        newUserForm = UserRegistrationForm(request.POST)
+        if newUserForm.is_valid():
+            newUser = newUserForm.save()
+            login(request, newUser)
+            return redirect("home")
+        return render(request, "registration/register.html", {"form": newUserForm})
+    return render(request, "registration/register.html", {"form": UserRegistrationForm()})
 
 
 def shorten(request):
