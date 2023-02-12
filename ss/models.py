@@ -8,4 +8,3 @@ class Url(models.Model):
     url = models.URLField(blank=False)
     status = models.BooleanField(default=True)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="urls")
-    session = models.CharField(null=True, max_length=32)
