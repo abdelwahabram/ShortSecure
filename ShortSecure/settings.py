@@ -138,3 +138,9 @@ LOGOUT_REDIRECT_URL = "/"
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
+
+# configure csrf token
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://web-production-6babb.up.railway.app/'
+]
