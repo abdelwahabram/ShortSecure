@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import UrlForm, UserRegistrationForm
 from .models import Url
@@ -72,6 +72,17 @@ def viewUrls(request):
         id_list = request.session["urls"]
         urls = Url.objects.filter(id__in=id_list)
     return render(request, "ss/myUrls.html", {"urls":urls})
+
+
+def viewUrl(request, id):
+    url = get_object_or_404(Url, id = id)
+    if request.user.is_authenticated and request.user != url.user:
+        raise Http404
+    if not "urls" in request.session:
+        raise Http404
+    if not url.id in request.session["urls"]:
+        raise Http404
+    return render(request, "ss/url.html", {"url": url.url, "short": hash(url.id)})
 
 
 def hash(id):
