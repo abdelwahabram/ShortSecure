@@ -142,5 +142,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 # configure csrf token
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://web-production-6babb.up.railway.app/'
+    'https://web-production-6babb.up.railway.app'
 ]
