@@ -78,9 +78,9 @@ def viewUrl(request, id):
     url = get_object_or_404(Url, id = id)
     if request.user.is_authenticated and request.user != url.user:
         raise Http404
-    if not "urls" in request.session:
+    if not request.user.is_authenticated and not "urls" in request.session:
         raise Http404
-    if not url.id in request.session["urls"]:
+    if not request.user.is_authenticated and not url.id in request.session["urls"]:
         raise Http404
     return render(request, "ss/url.html", {"url": url.url, "short": hash(url.id)})
 
