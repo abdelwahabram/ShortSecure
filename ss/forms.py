@@ -11,7 +11,7 @@ class UrlForm(forms.ModelForm):
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    saveSession = forms.BooleanField()
+    saveSession = forms.BooleanField(required=False)
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
