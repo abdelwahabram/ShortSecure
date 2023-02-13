@@ -1,6 +1,12 @@
 {% extends "ss/layout.html" %}
 {% block body %}
-{%for url in urls%}
-<h1>url: <a href="{% url 'url' url.id %}">{{url.url}}</a></h1>
-{%endfor%}
+<div class="list-group">
+    {%for url in urls%}
+    <a href="{% url 'url' url.id %}" class="list-group-item list-group-item-action">visit url : {{url.url}}</a>
+    {%empty%}
+    <div class="alert alert-dark" role="alert">
+        You didn't shorten any urls yet!!!
+    </div>
+    {%endfor%}
+</div>
 {% endblock %}
