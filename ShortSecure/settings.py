@@ -84,7 +84,7 @@ DATABASES = {
         'USER': config('PGUSER'),
         'PASSWORD': config('PGPASSWORD'),
         'HOST': config('PGHOST'),
-        'PORT': config('PGPORT'),
+        'PORT': config('PGPORT', cast=int),
     }
 }
 
