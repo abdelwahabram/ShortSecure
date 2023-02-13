@@ -1,6 +1,6 @@
 {% extends "ss/layout.html" %}
 {% block body %}
 {%for url in urls%}
-<h1>url: <a href="{{url.url}}">{{url}}</a></h1>
+<h1>url: <a href="{% url 'url' url.id %}">{{url.url}}</a></h1>
 {%endfor%}
 {% endblock %}
