@@ -11,7 +11,7 @@ from django.contrib.auth import login
 
 
 def home(request):
-    return HttpResponse("welcome")
+    return render(request, "ss/home.html")
 
 
 def register(request):
