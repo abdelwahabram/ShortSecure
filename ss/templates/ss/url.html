@@ -1,5 +1,5 @@
 {% extends "ss/layout.html" %}
 {% block body %}
 <h1>url: <a href="{{url}}">visit</a></h1>
-<h2>short: <a href="{% url 'redirect' short %}">{{ request.META.HTTP_HOST }}/{{short}}</a> </h2>
+<h2>short url: <a href="{% url 'redirect' short %}">{{ request.META.HTTP_HOST }}/{{short}}</a> </h2>
 {% endblock %}

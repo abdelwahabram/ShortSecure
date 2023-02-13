@@ -1,19 +1,43 @@
 {% extends "ss/layout.html" %}
 {% block body %}
 {% if secure %}
-    <h2>This site is Fine</h2>
-    <a href="{{url}}">continue</a>
+    <h2 class="bg-success"></h2>
+    <div class="alert alert-info" role="alert">
+        This site is Fine
+    </div>
+    <a href="{{url}}" class="btn btn-primary">continue</a>
 {% else %}
-    <h2>This site has been flagged as malicious</h2>
+    <div class="alert alert-danger" role="alert">
+        This site has been flagged as malicious
+    </div>
     {% if shorten %}
-    <a href="{% url 'shorten' %}">shorten another url</a>
+    <a href="{% url 'shorten' %}" class="btn btn-primary">shorten another url</a>
     {% else %}
-    <a href="{{url}}">continue</a>
+    <a href="{{url}}" class="btn btn-danger">continue</a>
     {% endif %}
 {% endif %}
 <h3>virus total report</h3>
-{% for vendor, data in vendors.items %}
-{{vendor}}
-{{data}}
-{% endfor %}
+<h3>original url : {{url}}</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">vendor</th>
+            <th scope="col">category</th>
+            <th scope="col">result</th>
+            <th scope="col">method</th>
+            <th scope="col">engine</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vendor, data in vendors.items %}
+        <tr>
+            <th scope="row">{{vendor}}</th>
+            {% for value in data.values %}
+            <td>{{value}}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}
