@@ -1,1 +1,1 @@
-web: gunicorn 'ss.wsgi'
+web: gunicorn 'ShortSecure.wsgi'
