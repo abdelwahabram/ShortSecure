@@ -9,7 +9,7 @@ url shortening service that checks for url security
 * [Setup](#setup)
 
 ## Demo link:
-https://web-production-6babb.up.railway.app/
+https://2bdelwahab000.pythonanywhere.com/
 
 ## About the website:
 this is a url shortener that makes sure the url is secure before processing it and before redirecting the user to the url using virus total api and prints the security report
